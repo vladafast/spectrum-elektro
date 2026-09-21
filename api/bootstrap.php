@@ -6,6 +6,11 @@
 // se ručno pravi MySQL baza u panelu.
 // ===================================================================
 
+// Greške se i dalje beleže (log_errors), ali se ne prikazuju posetiocima —
+// sprečava curenje putanja fajlova/detalja servera u slučaju greške.
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
 function spectrum_db(): PDO {
     static $pdo = null;
     if ($pdo !== null) {

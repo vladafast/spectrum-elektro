@@ -14,6 +14,7 @@ import {
   logout,
   checkSession,
 } from "./store.js";
+import { escapeHTML } from "./utils.js";
 
 const ICON_OPTIONS = [
   ["tv", "Televizor"],
@@ -337,23 +338,23 @@ function renderTable(items) {
           ? `<span class="badge">Istaknuto</span>`
           : "";
       return `
-      <tr data-id="${item.id}">
+      <tr data-id="${escapeHTML(item.id)}">
         <td>
           <div class="row-name">
-            <span class="icon-wrap">${item.image ? `<img src="${item.image}" alt="">` : icon(item.icon, { size: 17 })}</span>
+            <span class="icon-wrap">${item.image ? `<img src="${escapeHTML(item.image)}" alt="">` : icon(item.icon, { size: 17 })}</span>
             <div>
-              <strong>${item.name}</strong>
-              <span>${item.category}${item.brand ? " · " + item.brand : ""}</span>
+              <strong>${escapeHTML(item.name)}</strong>
+              <span>${escapeHTML(item.category)}${item.brand ? " · " + escapeHTML(item.brand) : ""}</span>
             </div>
           </div>
         </td>
         <td>${item.type === "prodaja" ? "Proizvod" : "Usluga"}</td>
-        <td>${formatPrice(item)}</td>
+        <td>${escapeHTML(formatPrice(item))}</td>
         <td>${statusBadge}</td>
         <td>
           <div class="row-actions">
-            <button type="button" class="js-edit" data-id="${item.id}" aria-label="Izmeni">${icon("edit", { size: 15 })}</button>
-            <button type="button" class="danger js-delete" data-id="${item.id}" aria-label="Obriši">${icon("trash", { size: 15 })}</button>
+            <button type="button" class="js-edit" data-id="${escapeHTML(item.id)}" aria-label="Izmeni">${icon("edit", { size: 15 })}</button>
+            <button type="button" class="danger js-delete" data-id="${escapeHTML(item.id)}" aria-label="Obriši">${icon("trash", { size: 15 })}</button>
           </div>
         </td>
       </tr>`;

@@ -4,41 +4,44 @@
 // ===================================================================
 import { icon } from "./icons.js";
 import { formatPrice } from "./store.js";
+import { escapeHTML } from "./utils.js";
 
 export function productCardHTML(item) {
   const conditionClass = item.condition === "Polovno" ? "used" : "new";
+  const name = escapeHTML(item.name);
   return `
-  <article class="product-card" data-id="${item.id}">
+  <article class="product-card" data-id="${escapeHTML(item.id)}">
     <div class="product-media">
-      ${item.brand ? `<span class="badge badge-brand">${item.brand}</span>` : ""}
-      <span class="badge badge-condition ${conditionClass}">${item.condition || "Novo"}</span>
-      ${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy">` : `<span class="icon">${icon(item.icon, { size: 64 })}</span>`}
+      ${item.brand ? `<span class="badge badge-brand">${escapeHTML(item.brand)}</span>` : ""}
+      <span class="badge badge-condition ${conditionClass}">${escapeHTML(item.condition || "Novo")}</span>
+      ${item.image ? `<img src="${escapeHTML(item.image)}" alt="${name}" loading="lazy">` : `<span class="icon">${icon(item.icon, { size: 64 })}</span>`}
       ${!item.stock ? `<div class="badge-out">Nema na stanju</div>` : ""}
     </div>
     <div class="product-body">
-      <span class="cat">${item.category}</span>
-      <h3>${item.name}</h3>
-      <p class="desc">${item.description}</p>
+      <span class="cat">${escapeHTML(item.category)}</span>
+      <h3>${name}</h3>
+      <p class="desc">${escapeHTML(item.description)}</p>
       <div class="price-row">
         <div class="price-wrap">
           ${item.oldPrice ? `<span class="price-old">${Number(item.oldPrice).toLocaleString("sr-RS")} RSD</span>` : ""}
-          <span class="price">${formatPrice(item)}</span>
+          <span class="price">${escapeHTML(formatPrice(item))}</span>
         </div>
-        <button type="button" class="btn btn-outline btn-sm js-view-item" data-id="${item.id}">Detalji</button>
+        <button type="button" class="btn btn-outline btn-sm js-view-item" data-id="${escapeHTML(item.id)}">Detalji</button>
       </div>
     </div>
   </article>`;
 }
 
 export function serviceCardHTML(item) {
+  const name = escapeHTML(item.name);
   return `
   <article class="service-card glass">
-    <div class="icon-wrap">${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy">` : icon(item.icon, { size: 24 })}</div>
-    <span class="cat">${item.category}</span>
-    <h3>${item.name}</h3>
-    <p class="desc">${item.description}</p>
+    <div class="icon-wrap">${item.image ? `<img src="${escapeHTML(item.image)}" alt="${name}" loading="lazy">` : icon(item.icon, { size: 24 })}</div>
+    <span class="cat">${escapeHTML(item.category)}</span>
+    <h3>${name}</h3>
+    <p class="desc">${escapeHTML(item.description)}</p>
     <div class="price-row">
-      <span class="price">${formatPrice(item)}</span>
+      <span class="price">${escapeHTML(formatPrice(item))}</span>
     </div>
   </article>`;
 }
@@ -47,7 +50,7 @@ export function emptyStateHTML(message = "Nema rezultata za izabrane filtere.") 
   return `
   <div class="empty-state">
     <span class="icon">${icon("search", { size: 40 })}</span>
-    <p>${message}</p>
+    <p>${escapeHTML(message)}</p>
   </div>`;
 }
 
@@ -78,9 +81,16 @@ export function mountItemModal() {
 
 export function openItemModal(item) {
   const dialog = mountItemModal();
-  dialog.querySelector("#modalMedia").innerHTML = item.image
-    ? `<img src="${item.image}" alt="${item.name}">`
-    : `<span class="icon">${icon(item.icon, { size: 72 })}</span>`;
+  const media = dialog.querySelector("#modalMedia");
+  if (item.image) {
+    media.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = item.image;
+    img.alt = item.name;
+    media.appendChild(img);
+  } else {
+    media.innerHTML = `<span class="icon">${icon(item.icon, { size: 72 })}</span>`;
+  }
   dialog.querySelector("#modalCat").textContent = `${item.category}${item.brand ? " · " + item.brand : ""}`;
   dialog.querySelector("#modalName").textContent = item.name;
   dialog.querySelector("#modalDesc").textContent = item.description;

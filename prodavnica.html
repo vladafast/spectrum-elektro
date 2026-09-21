@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prodavnica — TV Spectrum Elektro</title>
+<meta name="description" content="Pregledajte ponudu polovnih televizora vodećih brendova, daljinskih upravljača, kablova i rezervnih delova u TV Spectrum Elektro prodavnici.">
+<link rel="icon" type="image/png" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Preskoči na sadržaj</a>
+
+<template id="icon-menu-tpl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/></svg></template>
+<template id="icon-close-tpl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M5 5l14 14M19 5L5 19"/></svg></template>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo-mark.png" alt="Spectrum Elektro logo">
+      <span class="brand-name">TV Spectrum<br><small>Elektro</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Glavna navigacija">
+      <a href="index.html">Početna</a>
+      <a href="prodavnica.html" aria-current="page">Prodavnica</a>
+      <a href="servis.html">Servis</a>
+      <a href="o-nama.html">O nama</a>
+      <a href="kontakt.html">Kontakt</a>
+    </nav>
+    <div class="header-actions">
+      <a class="phone-cta js-phone-link" href="tel:+381654646049">
+        <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h3.3L10 9l-2.2 1.6a11.5 11.5 0 0 0 5.6 5.6L15 14l4.5 1.7V19a2 2 0 0 1-2.1 2C9.9 20.5 3.5 14.1 3 6.6A2 2 0 0 1 5 4.5z"/></svg>
+        <span class="js-phone-text">065 464 60 49</span>
+      </a>
+      <button type="button" class="nav-toggle" aria-label="Otvori meni" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-banner">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Početna</a><span>/</span><span>Prodavnica</span></div>
+      <span class="eyebrow">Prodavnica</span>
+      <h1>Televizori i oprema</h1>
+      <p style="max-width:56ch;margin-top:0.8rem;">Nudimo pažljivo pregledane polovne televizore vodećih brendova, a novi modeli su dostupni po porudžbini. Tu su i daljinski upravljači, kablovi i rezervni delovi.</p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+
+      <div class="filter-bar">
+        <div class="field">
+          <label for="filterCategory">Kategorija</label>
+          <select id="filterCategory"></select>
+        </div>
+        <div class="field">
+          <label for="filterBrand">Brend</label>
+          <select id="filterBrand"></select>
+        </div>
+        <div class="field">
+          <label for="filterCondition">Stanje</label>
+          <select id="filterCondition">
+            <option value="">Novo i polovno</option>
+            <option value="Novo">Novo</option>
+            <option value="Polovno">Polovno</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="filterSort">Sortiraj</label>
+          <select id="filterSort">
+            <option value="default">Preporučeno</option>
+            <option value="price-asc">Cena: niža ka višoj</option>
+            <option value="price-desc">Cena: viša ka nižoj</option>
+            <option value="name">Naziv A–Ž</option>
+          </select>
+        </div>
+        <div class="field search-field">
+          <label for="filterSearch">Pretraga</label>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
+          <input type="search" id="filterSearch" placeholder="Pretraži proizvode…">
+        </div>
+        <span class="results-count" id="resultsCount"></span>
+      </div>
+
+      <div class="card-grid" id="productGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="cta-banner reveal">
+        <h2>Ne vidite ono što tražite?</h2>
+        <p>Naša ponuda se stalno menja. Javite nam se — pronaći ćemo ili poručiti televizor koji vam odgovara.</p>
+        <div class="cta-actions">
+          <a href="kontakt.html" class="btn btn-primary">Pošaljite upit</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <img src="assets/logo-mark.png" alt="Spectrum Elektro logo" style="height:30px;">
+          <span class="brand-name">TV Spectrum<br><small>Elektro</small></span>
+        </a>
+        <p>Prodaja i servis TV, audio-video i kućnih aparata svih brendova. Porodična radnja s tradicijom od <span class="js-founded-year">1997</span>. godine.</p>
+        <div class="social-row">
+          <a href="#" class="js-social-instagram" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+          <a href="#" class="js-social-facebook" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 21v-7.5h2.5l.5-3H14V8.3c0-1 .3-1.7 1.8-1.7H17V4.1C16.6 4 15.6 4 14.5 4A4 4 0 0 0 10 8.5v2H7.5v3H10V21z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigacija</h4>
+        <ul>
+          <li><a href="index.html">Početna</a></li>
+          <li><a href="prodavnica.html">Prodavnica</a></li>
+          <li><a href="servis.html">Servis</a></li>
+          <li><a href="o-nama.html">O nama</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontakt</h4>
+        <ul>
+          <li><a class="js-phone-link js-phone-text" href="tel:+381654646049">065 464 60 49</a></li>
+          <li><a class="js-email-link" href="mailto:tvspektrumelektro@gmail.com">tvspektrumelektro@gmail.com</a></li>
+          <li><span class="js-address-text">Zanatski centar 31, Gornji Milanovac</span></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Radno vreme</h4>
+        <table class="hours-table"><tbody class="js-hours-table"></tbody></table>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span class="js-current-year">2026</span> TV Spectrum Elektro. Sva prava zadržana.</span>
+      <a href="admin.html">Admin panel</a>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/shop.js"></script>
+</body>
+</html>

@@ -1,7 +1,12 @@
 import { getItems } from "./store.js";
 import { productCardHTML, emptyStateHTML, bindItemModalTriggers } from "./cards.js";
 
-const allItems = getItems();
+let allItems = [];
+try {
+  allItems = await getItems();
+} catch (err) {
+  console.error("Ne mogu da učitam proizvode.", err);
+}
 const products = allItems.filter((i) => i.type === "prodaja");
 
 const grid = document.getElementById("productGrid");

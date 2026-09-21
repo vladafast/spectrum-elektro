@@ -1,19 +1,19 @@
 // ===================================================================
-// Admin panel — prijava + CRUD upravljanje proizvodima i uslugama.
-//
-// BEZBEDNOSNA NAPOMENA: Ova prijava je isključivo demonstrativna i
-// radi u pregledaču (nema pravog servera). Lozinka je vidljiva svakom
-// ko pogleda izvorni kod. Pre postavljanja sajta na internet i
-// davanja pristupa klijentu, admin panel MORA dobiti pravu server
-// stranu autentifikaciju (npr. Netlify Identity, Firebase Auth,
-// sopstveni backend sa hešovanom lozinkom) — inače bilo ko može da
-// izmeni podatke.
+// Admin panel — prijava (prava server sesija) + CRUD upravljanje
+// proizvodima i uslugama preko PHP/SQLite bekenda (/api).
 // ===================================================================
 import { icon } from "./icons.js";
-import { getItems, addItem, updateItem, deleteItem, resetItems, formatPrice } from "./store.js";
-
-const ADMIN_PASSWORD = "spectrum2026";
-const SESSION_KEY = "spectrum_admin_session";
+import {
+  getItems,
+  addItem,
+  updateItem,
+  deleteItem,
+  resetItems,
+  formatPrice,
+  login,
+  logout,
+  checkSession,
+} from "./store.js";
 
 const ICON_OPTIONS = [
   ["tv", "Televizor"],
@@ -38,14 +38,10 @@ const loginForm = document.getElementById("loginForm");
 const loginError = document.getElementById("loginError");
 const logoutBtn = document.getElementById("logoutBtn");
 
-function isLoggedIn() {
-  return sessionStorage.getItem(SESSION_KEY) === "1";
-}
-
-function showAdmin() {
+async function showAdmin() {
   loginScreen.style.display = "none";
   adminShell.classList.add("active");
-  refreshAll();
+  await refreshAll();
 }
 
 function showLogin() {
@@ -53,21 +49,30 @@ function showLogin() {
   loginScreen.style.display = "grid";
 }
 
-loginForm.addEventListener("submit", (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
   const value = document.getElementById("loginPassword").value;
-  if (value === ADMIN_PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, "1");
+  submitBtn.disabled = true;
+  try {
+    await login(value);
     loginError.classList.remove("show");
     loginForm.reset();
-    showAdmin();
-  } else {
+    await showAdmin();
+  } catch (err) {
+    loginError.textContent = err.message || "Pogrešna lozinka.";
     loginError.classList.add("show");
+  } finally {
+    submitBtn.disabled = false;
   }
 });
 
-logoutBtn.addEventListener("click", () => {
-  sessionStorage.removeItem(SESSION_KEY);
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await logout();
+  } catch {
+    // ignorišemo — u svakom slučaju vraćamo na ekran za prijavu
+  }
   showLogin();
 });
 
@@ -126,6 +131,7 @@ iconSelect.innerHTML = ICON_OPTIONS.map(([val, label]) => `<option value="${val}
 let currentType = "prodaja";
 let editingId = null;
 let currentImage = null;
+let currentItems = [];
 
 /* ---------------- Image upload ---------------- */
 const MAX_IMAGE_DIM = 900;
@@ -247,7 +253,7 @@ function fillForm(item) {
   window.scrollTo({ top: document.getElementById("adminPanel").offsetTop - 100, behavior: "smooth" });
 }
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const base = {
@@ -274,21 +280,25 @@ form.addEventListener("submit", (e) => {
     base.priceLabel = isFree ? "Besplatno" : null;
   }
 
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
   try {
     if (editingId) {
-      updateItem(editingId, base);
+      await updateItem(editingId, base);
       showToast("Izmene su sačuvane.");
     } else {
-      addItem(base);
+      await addItem(base);
       showToast("Stavka je dodata.");
     }
   } catch (err) {
     showToast(err.message || "Čuvanje nije uspelo.");
+    submitBtn.disabled = false;
     return;
   }
+  submitBtn.disabled = false;
 
   resetForm();
-  refreshAll();
+  await refreshAll();
 });
 
 /* ---------------- Table ---------------- */
@@ -298,8 +308,7 @@ const emptyState = document.getElementById("adminEmpty");
 const searchInput = document.getElementById("adminSearch");
 const typeFilter = document.getElementById("adminTypeFilter");
 
-function renderTable() {
-  const items = getItems();
+function renderTable(items) {
   const q = searchInput.value.trim().toLowerCase();
   const typeVal = typeFilter.value;
 
@@ -356,27 +365,30 @@ tableBody.addEventListener("click", async (e) => {
   const editBtn = e.target.closest(".js-edit");
   const delBtn = e.target.closest(".js-delete");
   if (editBtn) {
-    const item = getItems().find((i) => i.id === editBtn.dataset.id);
+    const item = currentItems.find((i) => i.id === editBtn.dataset.id);
     if (item) fillForm(item);
   }
   if (delBtn) {
-    const item = getItems().find((i) => i.id === delBtn.dataset.id);
+    const item = currentItems.find((i) => i.id === delBtn.dataset.id);
     if (!item) return;
     const ok = await askConfirm(`Da li sigurno želite da obrišete „${item.name}“? Ova akcija se ne može poništiti.`);
     if (ok) {
-      deleteItem(item.id);
-      showToast("Stavka je obrisana.");
-      refreshAll();
+      try {
+        await deleteItem(item.id);
+        showToast("Stavka je obrisana.");
+        await refreshAll();
+      } catch (err) {
+        showToast(err.message || "Brisanje nije uspelo.");
+      }
     }
   }
 });
 
-searchInput.addEventListener("input", renderTable);
-typeFilter.addEventListener("change", renderTable);
+searchInput.addEventListener("input", () => renderTable(currentItems));
+typeFilter.addEventListener("change", () => renderTable(currentItems));
 
 /* ---------------- Stats ---------------- */
-function renderStats() {
-  const items = getItems();
+function renderStats(items) {
   const products = items.filter((i) => i.type === "prodaja");
   const services = items.filter((i) => i.type === "servis");
   const inStockValue = products.filter((p) => p.stock).reduce((sum, p) => sum + Number(p.price || 0), 0);
@@ -391,16 +403,19 @@ function renderStats() {
 document.getElementById("resetBtn").addEventListener("click", async () => {
   const ok = await askConfirm("Ovo će vratiti SVE proizvode i usluge na podrazumevanu (početnu) listu i obrisati sve vaše izmene. Nastaviti?");
   if (ok) {
-    resetItems();
-    resetForm();
-    showToast("Podaci su vraćeni na podrazumevane.");
-    refreshAll();
+    try {
+      await resetItems();
+      resetForm();
+      showToast("Podaci su vraćeni na podrazumevane.");
+      await refreshAll();
+    } catch (err) {
+      showToast(err.message || "Resetovanje nije uspelo.");
+    }
   }
 });
 
 /* ---------------- Datalists for category/brand ---------------- */
-function refreshDatalists() {
-  const items = getItems();
+function refreshDatalists(items) {
   categoryList.innerHTML = [...new Set(items.map((i) => i.category).filter(Boolean))]
     .map((v) => `<option value="${v}"></option>`)
     .join("");
@@ -409,12 +424,26 @@ function refreshDatalists() {
     .join("");
 }
 
-function refreshAll() {
-  renderStats();
-  renderTable();
-  refreshDatalists();
+async function refreshAll() {
+  try {
+    currentItems = await getItems();
+  } catch (err) {
+    showToast(err.message || "Greška pri učitavanju podataka.");
+    currentItems = [];
+  }
+  renderStats(currentItems);
+  renderTable(currentItems);
+  refreshDatalists(currentItems);
 }
 
 /* ---------------- Init ---------------- */
-if (isLoggedIn()) showAdmin();
-else showLogin();
+try {
+  const loggedIn = await checkSession();
+  if (loggedIn) {
+    await showAdmin();
+  } else {
+    showLogin();
+  }
+} catch {
+  showLogin();
+}

@@ -1,3 +1,8 @@
 .DS_Store
 Thumbs.db
 *.log
+
+# Živa baza podataka — generiše se sama na serveru od data/seed.json,
+# menja se stalno preko admin panela, ne prati se kroz git.
+data/spectrum.sqlite
+data/spectrum.sqlite-*

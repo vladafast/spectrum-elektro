@@ -1,7 +1,14 @@
 import { getItems } from "./store.js";
 import { serviceCardHTML, emptyStateHTML } from "./cards.js";
 
-const services = getItems().filter((i) => i.type === "servis");
+let items = [];
+try {
+  items = await getItems();
+} catch (err) {
+  console.error("Ne mogu da učitam usluge.", err);
+}
+
+const services = items.filter((i) => i.type === "servis");
 const grid = document.getElementById("serviceGrid");
 
 if (grid) {

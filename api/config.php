@@ -7,4 +7,4 @@
 // i zalepite ispis (počinje sa $2y$) ispod umesto trenutne vrednosti.
 // ===================================================================
 
-define('SPECTRUM_ADMIN_PASSWORD_HASH', '$2y$12$NeatraRzG5m3Ujh4cOh4V..7gqyvvqQVxdpME2EzOv06MVJzqF6yS');
+define('SPECTRUM_ADMIN_PASSWORD_HASH', '$2y$12$CLAChIr4PI4HquiF7f6fa.R10znqT5F1O9I2dSTVEu2ybElr5VixC');

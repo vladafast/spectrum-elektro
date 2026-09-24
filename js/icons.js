@@ -23,6 +23,8 @@ const PATHS = {
   mappin: '<path d="M12 21s7-6.3 7-11.5A7 7 0 0 0 5 9.5C5 14.7 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/>',
   instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/>',
   facebook: '<path d="M14 21v-7.5h2.5l.5-3H14V8.3c0-1 .3-1.7 1.8-1.7H17V4.1C16.6 4 15.6 4 14.5 4A4 4 0 0 0 10 8.5v2H7.5v3H10V21z"/>',
+  x: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/>',
+  reddit: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="14.2" r="5"/><circle cx="9.3" cy="14.2" r="1"/><circle cx="14.7" cy="14.2" r="1"/><path d="M9 17.2c1 1 5 1 6 0"/><path d="M12 9.2V5.7l2.7-1.3"/><circle cx="15.3" cy="4" r="1.1"/>',
   menu: '<path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/>',
   close: '<path d="M5 5l14 14M19 5L5 19"/>',
   search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>',
@@ -36,6 +38,7 @@ const PATHS = {
   logout: '<path d="M9 4.5H5.5A1.5 1.5 0 0 0 4 6v12a1.5 1.5 0 0 0 1.5 1.5H9"/><path d="M14 15.5L19 12l-5-3.5M19 12H9"/>',
   filter: '<path d="M3 5h18M6.5 12h11M10.5 19h3"/>',
   package: '<path d="M12 2.5l8.5 4.9v9.2L12 21.5l-8.5-4.9V7.4z"/><path d="M3.5 7.4L12 12.3l8.5-4.9M12 12.3v9.2"/>',
+  image: '<rect x="2.5" y="4.5" width="19" height="15" rx="2"/><circle cx="8.5" cy="10" r="1.7"/><path d="M21 15.5l-5.5-5-9.5 8"/>',
 };
 
 export function icon(name, opts = {}) {

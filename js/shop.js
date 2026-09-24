@@ -1,5 +1,6 @@
 import { getItems } from "./store.js";
-import { productCardHTML, emptyStateHTML, bindItemModalTriggers } from "./cards.js";
+import { productCardHTML, emptyStateHTML, bindItemModalTriggers, bindImageFallbacks } from "./cards.js";
+import { escapeHTML } from "./utils.js";
 
 let allItems = [];
 try {
@@ -23,8 +24,8 @@ function uniqueValues(list, key) {
 
 function populateSelect(select, values, label) {
   select.innerHTML =
-    `<option value="">${label}</option>` +
-    values.map((v) => `<option value="${v}">${v}</option>`).join("");
+    `<option value="">${escapeHTML(label)}</option>` +
+    values.map((v) => `<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("");
 }
 
 populateSelect(categorySel, uniqueValues(products, "category"), "Sve kategorije");
@@ -61,4 +62,5 @@ function render(list) {
 [categorySel, brandSel, conditionSel, sortSel].forEach((el) => el.addEventListener("change", applyFilters));
 searchInput.addEventListener("input", applyFilters);
 
+bindImageFallbacks(grid);
 applyFilters();

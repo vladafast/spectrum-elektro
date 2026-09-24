@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin panel — TV Spectrum Elektro</title>
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#06070b">
 <link rel="icon" type="image/png" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +30,7 @@
       <button type="submit" class="btn btn-primary btn-block">Prijavi se</button>
       <p class="login-error" id="loginError">Pogrešna lozinka. Pokušajte ponovo.</p>
     </form>
-    <p class="login-hint">Lozinku možete promeniti u fajlu <code>api/config.php</code> na serveru.</p>
+    <p class="login-hint">Lozinku možete promeniti u Supabase dashboardu (Authentication → Users).</p>
     <p class="login-hint"><a href="index.html">← Nazad na sajt</a></p>
   </div>
 </div>
@@ -57,6 +58,35 @@
       <div class="stat-card"><span>Usluge</span><strong id="statServices">0</strong></div>
       <div class="stat-card"><span>Nema na stanju</span><strong id="statOutOfStock">0</strong></div>
       <div class="stat-card"><span>Vrednost zaliha</span><strong id="statValue">0 RSD</strong></div>
+    </div>
+
+    <!-- DRUŠTVENE MREŽE -->
+    <div class="glass social-panel" id="socialPanel">
+      <h2>Društvene mreže</h2>
+      <p class="panel-sub">Ostavi polje prazno da se ta ikonica ne prikazuje u footeru sajta.</p>
+      <form id="socialForm">
+        <div class="social-field-grid">
+          <div class="field-group">
+            <label for="socialInstagram">Instagram link</label>
+            <input type="url" id="socialInstagram" placeholder="https://instagram.com/...">
+          </div>
+          <div class="field-group">
+            <label for="socialFacebook">Facebook link</label>
+            <input type="url" id="socialFacebook" placeholder="https://facebook.com/...">
+          </div>
+          <div class="field-group">
+            <label for="socialX">X (Twitter) link</label>
+            <input type="url" id="socialX" placeholder="https://x.com/...">
+          </div>
+          <div class="field-group">
+            <label for="socialReddit">Reddit link</label>
+            <input type="url" id="socialReddit" placeholder="https://reddit.com/u/...">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sačuvaj linkove</button>
+        </div>
+      </form>
     </div>
 
     <div class="admin-grid">
@@ -126,18 +156,14 @@
           </div>
 
           <div class="field-group">
-            <label for="fieldImage">Slika (opciono)</label>
-            <div class="image-upload" id="imageUpload">
-              <div class="image-preview" id="imagePreview">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
-              </div>
-              <div class="image-upload-actions">
-                <label class="btn btn-outline btn-sm" for="fieldImage">Izaberi sliku</label>
-                <button type="button" class="btn btn-ghost btn-sm" id="removeImageBtn" style="display:none;">Ukloni</button>
-                <input type="file" id="fieldImage" accept="image/*" style="display:none;">
-              </div>
+            <label for="fieldImages">Slike (opciono, više njih)</label>
+            <div class="image-grid" id="imageGrid"></div>
+            <div class="image-upload-actions">
+              <label class="btn btn-outline btn-sm" for="fieldImages" id="addImagesBtn">Dodaj slike</label>
+              <input type="file" id="fieldImages" accept="image/*" multiple style="display:none;">
+              <span class="field-hint-inline" id="imageUploadStatus"></span>
             </div>
-            <p class="field-hint">Ako ne dodate sliku, na sajtu će se prikazati ikonica ispod. Slika se automatski smanjuje radi uštede prostora.</p>
+            <p class="field-hint">Prva slika je naslovna (koristi se u listi proizvoda) — kliknite „Postavi kao naslovnu” na bilo kojoj drugoj da je promenite. Ako ne dodate nijednu, na sajtu će se prikazati ikonica ispod. Slike se automatski uklapaju u dobru veličinu, uz zadržavanje orijentacije.</p>
           </div>
 
           <div class="field-group">

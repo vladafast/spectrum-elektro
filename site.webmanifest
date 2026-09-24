@@ -1,0 +1,15 @@
+{
+  "name": "TV Spectrum Elektro",
+  "short_name": "Spectrum Elektro",
+  "description": "Prodaja i servis TV, audio-video tehnike i kućnih aparata",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06070b",
+  "theme_color": "#06070b",
+  "lang": "sr",
+  "icons": [
+    { "src": "assets/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "assets/favicon-256.png", "sizes": "256x256", "type": "image/png" },
+    { "src": "assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

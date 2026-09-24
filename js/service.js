@@ -1,5 +1,5 @@
 import { getItems } from "./store.js";
-import { serviceCardHTML, emptyStateHTML } from "./cards.js";
+import { serviceCardHTML, emptyStateHTML, bindImageFallbacks } from "./cards.js";
 
 let items = [];
 try {
@@ -13,4 +13,5 @@ const grid = document.getElementById("serviceGrid");
 
 if (grid) {
   grid.innerHTML = services.length ? services.map(serviceCardHTML).join("") : emptyStateHTML("Trenutno nema definisanih usluga.");
+  bindImageFallbacks(grid);
 }

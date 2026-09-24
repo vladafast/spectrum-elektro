@@ -1,5 +1,5 @@
 import { getItems } from "./store.js";
-import { productCardHTML, serviceCardHTML, bindItemModalTriggers } from "./cards.js";
+import { productCardHTML, serviceCardHTML, bindItemModalTriggers, bindImageFallbacks } from "./cards.js";
 
 let items = [];
 try {
@@ -15,9 +15,11 @@ const productsMount = document.getElementById("featuredProducts");
 if (productsMount) {
   productsMount.innerHTML = featuredProducts.map(productCardHTML).join("");
   bindItemModalTriggers(productsMount, items);
+  bindImageFallbacks(productsMount);
 }
 
 const servicesMount = document.getElementById("featuredServices");
 if (servicesMount) {
   servicesMount.innerHTML = featuredServices.map(serviceCardHTML).join("");
+  bindImageFallbacks(servicesMount);
 }
